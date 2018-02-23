@@ -61,5 +61,29 @@ class Chair extends ObjectGroup {
             }
             this.group.push(legSupport);
         }
+        // build seat base
+        let cushSupport = new PolygonalPrism(gl, {
+            topRadius: 0.35,
+            bottomRadius: 0.35,
+            numSides: 4,
+            height: 0.15,
+            topColor: vec3.fromValues(0.2, 0.121, 0.019),
+            bottomColor: vec3.fromValues(0.462, 0.286, 0.058)
+        });
+        mat4.rotateZ(cushSupport.coordFrame, cushSupport.coordFrame, glMatrix.toRadian(45));
+        mat4.translate(cushSupport.coordFrame, cushSupport.coordFrame, vec3.fromValues(0, 0, 0.5));
+        this.group.push(cushSupport);
+        // build seat cushion
+        let cush = new PolygonalPrism(gl, {
+            topRadius: 0.35,
+            bottomRadius: 0.35,
+            numSides: 4,
+            height: 0.05,
+            topColor: vec3.fromValues(0.768, 0.2, 0.109),
+            bottomColor: vec3.fromValues(0.494, 0.141, 0.086)
+        });
+        mat4.rotateZ(cush.coordFrame, cush.coordFrame, glMatrix.toRadian(45));
+        mat4.translate(cush.coordFrame, cush.coordFrame, vec3.fromValues(0, 0, 0.65));
+        this.group.push(cush);
     }
 }
