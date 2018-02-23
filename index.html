@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="libs/webgl-utils.js"></script>
+  <script src="libs/shader-utils.js"></script>
+  <script src="libs/gl-matrix.js"></script>
+  <script src="geometry/Object3D.js"></script>
+  <script src="geometry/PolygonalPrism.js"></script>
+  <script src="geometry/Cone.js"></script>
+  <script src="geometry/Torus.js"></script>
+  <script src="model/ObjectGroup.js"></script>
+  <script src="model/Arrow.js"></script>
+  <script src="model/Axes.js"></script>
+  <script src="model/Grid.js"></script>
+  <script src="model/Cube.js"></script>
+  <script src="VirtualTrackball.js"></script>
+  <script src="main.js"></script>
+  <title>Isometric View</title>
+  <style>
+    #container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body onload="main();">
+<h1>Isometric View</h1>
+<p>Drag your mouse to change view</p>
+<div id="container">
+  <canvas id="my-canvas"></canvas></div>
+</body>
+</html>
