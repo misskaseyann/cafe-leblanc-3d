@@ -18,7 +18,9 @@ function main() {
 function start(prog) {
   gl.useProgram(prog);
   gl.clearColor(0, 0, 0, 1);
+    gl.enable(gl.CULL_FACE);
   gl.enable (gl.DEPTH_TEST);
+  gl.cullFace(gl.BACK);
 
   let posAttr = gl.getAttribLocation(prog, "vertexPos");
   let colAttr = gl.getAttribLocation(prog, "vertexCol");
@@ -39,18 +41,25 @@ function start(prog) {
   });
   projMat = mat4.create();
   gl.uniformMatrix4fv (projUni, false, projMat);
-  viewMat = mat4.create();
 
+  // -----------------------
+    viewMat = mat4.lookAt(mat4.create(),
+        vec3.fromValues (0, 4, 2),  // eye coord
+        vec3.fromValues (0, 0, 1),  // gaze point
+        vec3.fromValues (0, 0, 1)   // Z is up
+    );
+    //viewMat = mat4.create();
   // the camera is initially looking towards Z-negative
   // rotate around X to bring the Z axis pointing to the sky, but also
   // rotate the camera to get the correct ration for isometric projection
 
-  let angle = Math.asin(1/Math.sqrt(3));
-  mat4.rotateX(viewMat, viewMat, glMatrix.toRadian(-90) + angle);
-
-  mat4.rotateZ (viewMat, viewMat, glMatrix.toRadian(-135));
+  // let angle = Math.asin(1/Math.sqrt(3));
+  // mat4.rotateX(viewMat, viewMat, glMatrix.toRadian(-90) + angle);
+  //
+  // mat4.rotateZ (viewMat, viewMat, glMatrix.toRadian(-135));
   gl.uniformMatrix4fv (viewUni, false, viewMat);
   resizeHandler();
+
   requestAnimFrame(display);
 
   let trackball = new VirtualTrackball(canvas, 0, 0, canvas.width, canvas.height);
@@ -89,6 +98,7 @@ function init(gl) {
     xstep: 1.0, ystep: 1.0,
     color: [1,1,0]
   });
+  chair1 = new Chair(gl);
   // blueCube = new Cube(gl, {size: 1,
   //   topColor: [0.1, 0.6, 0.9], bottomColor: [1,1,1]});
   // greenCube = new Cube(gl, {size: 1,
@@ -106,6 +116,7 @@ function display() {
   let ty = [ 3, 3, 2, 1, 0, -1, -2, -2, -2, -2, -2, -2];
   axis.draw(gl);
   grid.draw(gl);
+  chair1.draw(gl);
   //torusBig.draw(gl);
 
   /* line up on the ground */
@@ -157,17 +168,17 @@ function initListener() {
                 break;
             // Up Arrow Key - Move: forward +Z axis.
             case 38:
-                // newView = mat4.fromTranslation(mat4.create(), vec3.fromValues(0, 0.05, -0.05));
-                // mat4.multiply(viewMat, newView, viewMat);
-                // gl.uniformMatrix4fv(viewUni, false, viewMat);
-                // window.requestAnimFrame(display);
+                newView = mat4.fromTranslation(mat4.create(), vec3.fromValues(0, 0, 0.05));
+                mat4.multiply(viewMat, newView, viewMat);
+                gl.uniformMatrix4fv(viewUni, false, viewMat);
+                window.requestAnimFrame(display);
                 break;
             // Down Arrow Key - Move: backward -Z axis.
             case 40:
-                // newView = mat4.fromTranslation(mat4.create(), vec3.fromValues(0, 0, -0.05));
-                // mat4.multiply(viewMat, newView, viewMat);
-                // gl.uniformMatrix4fv(viewUni, false, viewMat);
-                // window.requestAnimFrame(display);
+                newView = mat4.fromTranslation(mat4.create(), vec3.fromValues(0, 0, -0.05));
+                mat4.multiply(viewMat, newView, viewMat);
+                gl.uniformMatrix4fv(viewUni, false, viewMat);
+                window.requestAnimFrame(display);
                 break;
             // Right Arrow Key - Roll: right +Z axis.
             case 39:
