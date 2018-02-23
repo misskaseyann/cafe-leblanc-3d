@@ -76,23 +76,17 @@ function start(prog) {
 }
 
 function resizeHandler() {
-  let w = window.innerWidth - 16;
-  let h = 0.75 * w;
-  if (canvas.offsetTop + h + 16 > window.innerHeight) {
-    canvas.height = window.innerHeight - canvas.offsetTop - 16;
-    canvas.width = 1.333 * canvas.height;
-  }
-  else {
+    let w = window.innerWidth - 16;
+    let h = 0.75 * window.innerHeight;
     canvas.width = w;
     canvas.height = h;
-  }
-  gl.viewport (0, 0, canvas.width, canvas.height);
-  mat4.ortho(projMat, -6, +6, -4.5, +4.5, -10, +10);
-  gl.uniformMatrix4fv (projUni, false, projMat);
+    mat4.perspective (projMat, glMatrix.toRadian(60), w/h, 0.05, 20);
+    gl.uniformMatrix4fv (projUni, false, projMat);
+    gl.viewport(0, 0, w, h);
 }
 
 function init(gl) {
-  axis = new Axes(gl);
+  //axis = new Axes(gl);
   grid = new Grid(gl, {
     xrange: [-10, 10], yrange: [-10,+10],
     xstep: 1.0, ystep: 1.0,
@@ -114,7 +108,7 @@ function display() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   let tx = [ 1, 2, 2, 2, 2,  2,  2,  1, 0, -1, -2, -3];
   let ty = [ 3, 3, 2, 1, 0, -1, -2, -2, -2, -2, -2, -2];
-  axis.draw(gl);
+  //axis.draw(gl);
   grid.draw(gl);
   chair1.draw(gl);
   //torusBig.draw(gl);
@@ -132,6 +126,22 @@ function display() {
 }
 
 function initListener() {
+    window.addEventListener('wheel', event => {
+        switch (event.deltaMode) {
+            case event.deltaY:
+                newView = mat4.fromTranslation(mat4.create(), vec3.fromValues(0, 0, 0.05));
+                mat4.multiply(viewMat, newView, viewMat);
+                gl.uniformMatrix4fv(viewUni, false, viewMat);
+                window.requestAnimFrame(display);
+                break;
+            case (event.deltaX):
+                newView = mat4.fromTranslation(mat4.create(), vec3.fromValues(0, 0, -0.05));
+                mat4.multiply(viewMat, newView, viewMat);
+                gl.uniformMatrix4fv(viewUni, false, viewMat);
+                window.requestAnimFrame(display);
+                break;
+        }
+    });
     window.addEventListener('keydown', event => {
         switch (event.keyCode) {
             // W Key - Pitch: -X axis.
