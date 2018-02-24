@@ -93,16 +93,18 @@ function init(gl) {
     color: [1,1,0]
   });
   chair1 = new Chair(gl);
+  chair2 = new Chair(gl);
+  chair3 = new Chair(gl);
+  chair4 = new Chair(gl);
+  chair5 = new Chair(gl);
   // blueCube = new Cube(gl, {size: 1,
   //   topColor: [0.1, 0.6, 0.9], bottomColor: [1,1,1]});
   // greenCube = new Cube(gl, {size: 1,
   //   topColor: [0.03, 0.3, 0.25], bottomColor: [1,1,1]});
-  // torusBig = new Torus(gl, {
-  //     majorRadius: 5, minorRadius: 3
   // });
 }
 
-var tmp = mat4.create();
+let tmp = mat4.create();
 
 function display() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -111,7 +113,14 @@ function display() {
   //axis.draw(gl);
   grid.draw(gl);
   chair1.draw(gl);
-  //torusBig.draw(gl);
+  mat4.fromTranslation(tmp, vec3.fromValues(-1, 0, 0));
+  chair2.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(-2, 0, 0));
+  chair3.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(1, 0, 0));
+  chair4.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(2, 0, 0));
+  chair5.draw(gl, tmp);
 
   /* line up on the ground */
   // for (var k = 0; k < tx.length; k++) {
