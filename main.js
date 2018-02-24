@@ -97,6 +97,7 @@ function init(gl) {
   chair3 = new Chair(gl);
   chair4 = new Chair(gl);
   chair5 = new Chair(gl);
+  counter = new Counter(gl);
   // blueCube = new Cube(gl, {size: 1,
   //   topColor: [0.1, 0.6, 0.9], bottomColor: [1,1,1]});
   // greenCube = new Cube(gl, {size: 1,
@@ -108,12 +109,13 @@ let tmp = mat4.create();
 
 function display() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  let tx = [ 1, 2, 2, 2, 2,  2,  2,  1, 0, -1, -2, -3];
-  let ty = [ 3, 3, 2, 1, 0, -1, -2, -2, -2, -2, -2, -2];
+  //let tx = [ 1, 2, 2, 2, 2,  2,  2,  1, 0, -1, -2, -3];
+  //let ty = [ 3, 3, 2, 1, 0, -1, -2, -2, -2, -2, -2, -2];
   //axis.draw(gl);
   grid.draw(gl);
   chair1.draw(gl);
   mat4.fromTranslation(tmp, vec3.fromValues(-1, 0, 0));
+  mat4.rotateZ(tmp, tmp, glMatrix.toRadian(-40));
   chair2.draw(gl, tmp);
   mat4.fromTranslation(tmp, vec3.fromValues(-2, 0, 0));
   chair3.draw(gl, tmp);
@@ -121,6 +123,9 @@ function display() {
   chair4.draw(gl, tmp);
   mat4.fromTranslation(tmp, vec3.fromValues(2, 0, 0));
   chair5.draw(gl, tmp);
+
+  mat4.fromTranslation(tmp, vec3.fromValues(-3, -.75, 0));
+  counter.draw(gl, tmp);
 
   /* line up on the ground */
   // for (var k = 0; k < tx.length; k++) {
