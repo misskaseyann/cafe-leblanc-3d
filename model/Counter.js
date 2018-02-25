@@ -8,7 +8,7 @@ class Counter extends ObjectGroup {
             numSides: 4,
             height: 6,
             topColor: vec3.fromValues(0.2, 0.121, 0.019),
-            bottomColor: vec3.fromValues(0.462, 0.286, 0.058)
+            bottomColor: vec3.fromValues(0.376, 0.231, 0.043)
         });
         mat4.rotateX(bottomFront.coordFrame, bottomFront.coordFrame, glMatrix.toRadian(45));
         mat4.rotateY(bottomFront.coordFrame, bottomFront.coordFrame, glMatrix.toRadian(90));
