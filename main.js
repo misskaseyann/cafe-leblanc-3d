@@ -86,7 +86,6 @@ function resizeHandler() {
 }
 
 function init(gl) {
-  //axis = new Axes(gl);
   grid = new Grid(gl, {
     xrange: [-10, 10], yrange: [-10,+10],
     xstep: 1.0, ystep: 1.0,
@@ -98,21 +97,29 @@ function init(gl) {
   chair4 = new Chair(gl);
   chair5 = new Chair(gl);
   counter = new Counter(gl);
-  // blueCube = new Cube(gl, {size: 1,
-  //   topColor: [0.1, 0.6, 0.9], bottomColor: [1,1,1]});
-  // greenCube = new Cube(gl, {size: 1,
-  //   topColor: [0.03, 0.3, 0.25], bottomColor: [1,1,1]});
-  // });
+  light1 = new Light(gl);
+  light2 = new Light(gl);
+  light3 = new Light(gl);
+  light4 = new Light(gl);
+  sushi1 = new Sushi(gl);
+  sushi2 = new Sushi(gl);
+  sushi3 = new Sushi(gl);
+  sake1 = new SakeBottle(gl);
+  sake2 = new SakeBottle(gl);
+  sake3 = new SakeBottle(gl);
+  rug = new Cone(gl, {
+        radius: 4,
+        height: 0.0001,
+        tipColor: vec3.fromValues(0.317, 0.043, 0.023),
+        baseColor: vec3.fromValues(0.317, 0.043, 0.023)
+  });
 }
 
 let tmp = mat4.create();
 
 function display() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  //let tx = [ 1, 2, 2, 2, 2,  2,  2,  1, 0, -1, -2, -3];
-  //let ty = [ 3, 3, 2, 1, 0, -1, -2, -2, -2, -2, -2, -2];
-  //axis.draw(gl);
-  grid.draw(gl);
+  //grid.draw(gl);
   chair1.draw(gl);
   mat4.fromTranslation(tmp, vec3.fromValues(-1, 0, 0));
   mat4.rotateZ(tmp, tmp, glMatrix.toRadian(-40));
@@ -127,16 +134,29 @@ function display() {
   mat4.fromTranslation(tmp, vec3.fromValues(-3, -.75, 0));
   counter.draw(gl, tmp);
 
-  /* line up on the ground */
-  // for (var k = 0; k < tx.length; k++) {
-  //   mat4.fromTranslation(tmp, vec3.fromValues(tx[k], ty[k], 0));
-  //   blueCube.draw(gl, tmp);
-  // }
-  // /* stack up */
-  // for (var k = 1; k <= 4; k++) {
-  //   mat4.fromTranslation(tmp, vec3.fromValues(1, 3, k));
-  //   greenCube.draw(gl, tmp);
-  // }
+  mat4.fromTranslation(tmp, vec3.fromValues(-2, -1.1, 0));
+  light1.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(-.75, -1.1, 0));
+  light2.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(.75, -1.1, 0));
+  light3.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(2, -1.1, 0));
+  light4.draw(gl, tmp);
+
+  mat4.fromTranslation(tmp, vec3.fromValues(0, -1.15, 0));
+  sushi1.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(1, -1.15, 0));
+  sushi2.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(-2, -1.15, 0));
+  sushi3.draw(gl, tmp);
+
+  sake1.draw(gl);
+  mat4.fromTranslation(tmp, vec3.fromValues(-1.5, .2, 0));
+  sake2.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(2, 0, 0));
+  sake3.draw(gl, tmp);
+  mat4.fromTranslation(tmp, vec3.fromValues(0, -1.5, 0));
+  rug.draw(gl, tmp);
 }
 
 function initListener() {
