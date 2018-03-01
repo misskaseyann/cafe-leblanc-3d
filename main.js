@@ -1,13 +1,14 @@
 /**
  * Created by Hans Dulimarta on 2/21/18.
  */
-var gl, canvas;
+var gl, canvas, menu;
 var projMat, viewMat;
 var projUni, viewUni;
-var axis;
+var obj;
 
 function main() {
   canvas = document.getElementById('my-canvas');
+  menu = document.getElementById('obj-select');
   initListener();
   window.addEventListener('resize', resizeHandler);
   gl = WebGLUtils.create3DContext(canvas);
@@ -48,15 +49,6 @@ function start(prog) {
         vec3.fromValues (0, 0, 1),  // gaze point
         vec3.fromValues (0, 0, 1)   // Z is up
     );
-    //viewMat = mat4.create();
-  // the camera is initially looking towards Z-negative
-  // rotate around X to bring the Z axis pointing to the sky, but also
-  // rotate the camera to get the correct ration for isometric projection
-
-  // let angle = Math.asin(1/Math.sqrt(3));
-  // mat4.rotateX(viewMat, viewMat, glMatrix.toRadian(-90) + angle);
-  //
-  // mat4.rotateZ (viewMat, viewMat, glMatrix.toRadian(-135));
   gl.uniformMatrix4fv (viewUni, false, viewMat);
   resizeHandler();
 
@@ -86,6 +78,7 @@ function resizeHandler() {
 }
 
 function init(gl) {
+    obj = new ObjectGroup(gl);
   grid = new Grid(gl, {
     xrange: [-10, 10], yrange: [-10,+10],
     xstep: 1.0, ystep: 1.0,
@@ -116,12 +109,15 @@ function init(gl) {
 }
 
 let tmp = mat4.create();
+let sushitmp = [0, -1.15, 0];
+let saketmp = [-1.5, .2, 0];
+let chairtmp = [-1, 0, 0];
 
 function display() {
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   //grid.draw(gl);
   chair1.draw(gl);
-  mat4.fromTranslation(tmp, vec3.fromValues(-1, 0, 0));
+  mat4.fromTranslation(tmp, vec3.fromValues(chairtmp[0], chairtmp[1], chairtmp[2]));
   mat4.rotateZ(tmp, tmp, glMatrix.toRadian(-40));
   chair2.draw(gl, tmp);
   mat4.fromTranslation(tmp, vec3.fromValues(-2, 0, 0));
@@ -143,7 +139,7 @@ function display() {
   mat4.fromTranslation(tmp, vec3.fromValues(2, -1.1, 0));
   light4.draw(gl, tmp);
 
-  mat4.fromTranslation(tmp, vec3.fromValues(0, -1.15, 0));
+  mat4.fromTranslation(tmp, vec3.fromValues(sushitmp[0], sushitmp[1], sushitmp[2]));
   sushi1.draw(gl, tmp);
   mat4.fromTranslation(tmp, vec3.fromValues(1, -1.15, 0));
   sushi2.draw(gl, tmp);
@@ -151,7 +147,7 @@ function display() {
   sushi3.draw(gl, tmp);
 
   sake1.draw(gl);
-  mat4.fromTranslation(tmp, vec3.fromValues(-1.5, .2, 0));
+  mat4.fromTranslation(tmp, vec3.fromValues(saketmp[0], saketmp[1], saketmp[2]));
   sake2.draw(gl, tmp);
   mat4.fromTranslation(tmp, vec3.fromValues(2, 0, 0));
   sake3.draw(gl, tmp);
@@ -160,6 +156,19 @@ function display() {
 }
 
 function initListener() {
+    menu.addEventListener('click', event=> {
+        switch (menu.selectedIndex) {
+            case 0:
+                obj = 0;
+                break;
+            case 1:
+                obj = 1;
+                break;
+            case 2:
+                obj = 2;
+                break;
+        }
+    });
     window.addEventListener('wheel', event => {
         switch (event.deltaMode) {
             case event.deltaY:
@@ -239,6 +248,132 @@ function initListener() {
                 mat4.multiply(viewMat, newView, viewMat);
                 gl.uniformMatrix4fv(viewUni, false, viewMat);
                 window.requestAnimFrame(display);
+                break;
+            case 49:
+                viewMat = mat4.lookAt(mat4.create(),
+                    vec3.fromValues (1, -1, 2),  // eye coord
+                    vec3.fromValues (0, 0, 1),  // gaze point
+                    vec3.fromValues (0, 0, 1)   // Z is up
+                );
+                gl.uniformMatrix4fv (viewUni, false, viewMat);
+                window.requestAnimFrame(display);
+                break;
+            case 50:
+                viewMat = mat4.lookAt(mat4.create(),
+                    vec3.fromValues (-1, 0, 4),  // eye coord
+                    vec3.fromValues (0, 0, 1),  // gaze point
+                    vec3.fromValues (0, 0, 1)   // Z is up
+                );
+                gl.uniformMatrix4fv (viewUni, false, viewMat);
+                window.requestAnimFrame(display);
+                break;
+            case 51:
+                viewMat = mat4.lookAt(mat4.create(),
+                    vec3.fromValues (0, -4, 3),  // eye coord
+                    vec3.fromValues (0, 0, 1),  // gaze point
+                    vec3.fromValues (0, 0, 1)   // Z is up
+                );
+                gl.uniformMatrix4fv (viewUni, false, viewMat);
+                window.requestAnimFrame(display);
+                break;
+            case 52:
+                viewMat = mat4.lookAt(mat4.create(),
+                    vec3.fromValues (0, 4, 2),  // eye coord
+                    vec3.fromValues (0, 0, 1),  // gaze point
+                    vec3.fromValues (0, 0, 1)   // Z is up
+                );
+                gl.uniformMatrix4fv (viewUni, false, viewMat);
+                window.requestAnimFrame(display);
+                break;
+            case 85:
+                // u moves objects left
+                if (obj === 0) {
+                    sushitmp[0] = sushitmp[0] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 1) {
+                    saketmp[0] = saketmp[0] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 2) {
+                    chairtmp[0] = chairtmp[0] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                break;
+            case 73:
+                // i moves objects right
+                if (obj === 0) {
+                    sushitmp[0] = sushitmp[0] - 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 1) {
+                    saketmp[0] = saketmp[0] - 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 2) {
+                    chairtmp[0] = chairtmp[0] - 0.05;
+                    window.requestAnimFrame(display);
+                }
+                break;
+            case 74:
+                // j moves objects closer
+                if (obj === 0) {
+                    sushitmp[1] = sushitmp[1] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 1) {
+                    saketmp[1] = saketmp[1] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 2) {
+                    chairtmp[1] = chairtmp[1] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                break;
+            case 75:
+                // k moves objects further away
+                if (obj === 0) {
+                    sushitmp[1] = sushitmp[1] - 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 1) {
+                    saketmp[1] = saketmp[1] - 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 2) {
+                    chairtmp[1] = chairtmp[1] - 0.05;
+                    window.requestAnimFrame(display);
+                }
+                break;
+            case 78:
+                // n moves objects up
+                if (obj === 0) {
+                    sushitmp[2] = sushitmp[2] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 1) {
+                    saketmp[2] = saketmp[2] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 2) {
+                    chairtmp[2] = chairtmp[2] + 0.05;
+                    window.requestAnimFrame(display);
+                }
+                break;
+            case 77:
+                // k moves objects down
+                if (obj === 0) {
+                    sushitmp[2] = sushitmp[2] - 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 1) {
+                    saketmp[2] = saketmp[2] - 0.05;
+                    window.requestAnimFrame(display);
+                }
+                if (obj === 2) {
+                    chairtmp[2] = chairtmp[2] - 0.05;
+                    window.requestAnimFrame(display);
+                }
                 break;
         }
     });
