@@ -12,3 +12,5 @@ Some of the controls include:
 * W, A, S, D keys to move camera.
 * Select an object from the drop down menu.
 * Selected objects can be moved using the U, I, J, K, N, M keys.
+
+[Click here to see it in action.](http://www.cis.gvsu.edu/~stowellk/3d-sushi/)
